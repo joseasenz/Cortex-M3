@@ -10,7 +10,7 @@
 
 CONSOLE_DataStreamType ConsoleDataStream;
 
-bool DebugOutputEnabled = false;
+bool DebugOutputEnabled = true;
 
 
 void ConsoleDebugDataFormat()
