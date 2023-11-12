@@ -1,0 +1,2 @@
+eclipse.preferences.version=1
+sfrviewstate={"fFavorites"\:{"fLists"\:{"USART_CR1"\:["STM32F103/USART3/CR1"],"USART_SR"\:["STM32F103/USART3/SR"],"ADC"\:["STM32F103/ADC1/SR","STM32F103/ADC1/CR1","STM32F103/ADC1/CR2"]}},"fProperties"\:{"fNodeProperties"\:{"STM32F103/ADC1/DR"\:{"fNodeProperties"\:{"autoupdate"\:"false"}},"STM32F103/ADC1/SR"\:{"fNodeProperties"\:{"autoupdate"\:"true"}}}}}
