@@ -68,7 +68,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  GPIO_PinState button;
+  GPIO_PinState button1, button2;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -131,8 +131,9 @@ int main(void)
 	  ConsoleDebugDataSend();
 
       // USER button
-	  button = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
-	  if(button == GPIO_PIN_RESET)
+	  button1 = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+	  button2 = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0);
+	  if((button1 == GPIO_PIN_RESET) || (button2 == GPIO_PIN_RESET))
 	  {
 		  // USER led
 		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
