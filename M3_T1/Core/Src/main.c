@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
-#include "iwdg.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -89,8 +88,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART3_UART_Init();
   MX_ADC1_Init();
-  MX_SPI1_Init();
-  MX_IWDG_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
   // ADC callback
   HAL_ADC_RegisterCallback(&hadc1, HAL_ADC_CONVERSION_COMPLETE_CB_ID, AdcConversionCallback);
@@ -98,35 +96,33 @@ int main(void)
   HAL_UART_RegisterCallback(&huart3, HAL_UART_RX_COMPLETE_CB_ID, UartRxCallback);
   HAL_UART_RegisterCallback(&huart3, HAL_UART_TX_COMPLETE_CB_ID, UartTxCallback);
   // SPI callback
-  HAL_SPI_RegisterCallback(&hspi1, HAL_SPI_RX_COMPLETE_CB_ID, SpiRxCallback);
-  HAL_SPI_RegisterCallback(&hspi1, HAL_SPI_TX_COMPLETE_CB_ID, SpiTxCallback);
+  HAL_SPI_RegisterCallback(&hspi2, HAL_SPI_RX_COMPLETE_CB_ID, SpiRxCallback);
+  HAL_SPI_RegisterCallback(&hspi2, HAL_SPI_TX_COMPLETE_CB_ID, SpiTxCallback);
+  HAL_SPI_RegisterCallback(&hspi2, HAL_SPI_TX_RX_COMPLETE_CB_ID, SpiTxRxCallback);
   // Enable RX interrupt
   HAL_UART_Receive_IT(&huart3, &UartRxValue, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_ADC_Start_IT(&hadc1);
+  // Disable SPI CS
+  SpiChipSelectDisable();
+  // Trigger AD conversion
+  TriggerAdcInt();
   while (1)
   {
-
-	  // IWDG refresh
-	  HAL_IWDG_Refresh(&hiwdg);
 
 	  if(AdcValueReady)
 	  {
 		  AdcValueReady = false;
-		  ConsoleDataStream.AdcValue = AdcSampleValue;
+		  // Buffer AD converted value
+		  ConsoleDataStream.AdcValue = AdcConvertValue(AdcSampleValue);
 		  // Trigger ADC conversion
 		  TriggerAdcInt();
 	  }
 
-	  if(SpiValueReady)
-	  {
-	      SpiValueReady = false;
-		  ConsoleDataStream.SpiValue = SpiValue;
-
-	  }
+	  // Read SPI value, convert it and buffer it
+	  ConsoleDataStream.SpiValue = SpiConvertValue(TestSpi());
 
 	  ConsoleDebugDataSend();
 
@@ -161,10 +157,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI_DIV2;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL8;

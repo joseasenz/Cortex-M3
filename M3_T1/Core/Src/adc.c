@@ -131,6 +131,16 @@ void TriggerAdcInt()
 }
 
 
+float AdcConvertValue(uint16_t inputValue)
+{
+    float outputValue;
+
+    outputValue = ((float) inputValue) * 3.3 / 4095;
+
+    return outputValue;
+}
+
+
 
 void AdcConversionCallback(ADC_HandleTypeDef *hadc)
 {
