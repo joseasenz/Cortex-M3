@@ -43,6 +43,7 @@ void MX_ADC1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 void TriggerAdcInt();
+float AdcConvertValue(uint16_t inputValue);
 void AdcConversionCallback(ADC_HandleTypeDef *hadc);
 /* USER CODE END Prototypes */
 

@@ -19,8 +19,8 @@
 typedef struct
 {
 
-  uint16_t AdcValue;
-  uint8_t SpiValue;
+  float AdcValue;
+  float SpiValue;
 
 } CONSOLE_DataStreamType;
 
